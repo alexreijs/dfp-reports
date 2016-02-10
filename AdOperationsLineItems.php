@@ -58,8 +58,10 @@ try {
   $statementBuilder->OrderBy('id DESC')
       ->Limit(StatementBuilder::SUGGESTED_PAGE_LIMIT);
 
+  //$statementBuilder->Where("EndDateTime >= '" . date('Y-m-d', time() - 86400 * 7) . "' and Id IN (220191920, 226204160, 229005320, 229007000, 213311840, 213312080, 226082960, 227315000, 213312320, 229005800, 229007240, 227098400, 227098520, 225116960, 194592200, 194592440, 225117200, 224377640, 226214840, 226215080, 226353680, 229360880, 227808080, 227816360, 229377560, 37877240, 37877360, 226871120, 228534200,   4351720, 229340840, 194592920, 194592680)");
   $statementBuilder->Where("EndDateTime >= '" . date('Y-m-d', time() - 86400 * 7) . "'");
-  //$statementBuilder->Limit("10");
+  //$statementBuilder->Where("EndDateTime >= '" . date('Y-m-d', time() - 86400 * 7) . "' and id = 228600800");
+  $statementBuilder->Limit("100");
 
   // Default for total result set size.
   $totalResultSetSize = 0;
@@ -107,30 +109,35 @@ try {
       $i = $page->startIndex;
       foreach ($page->results as $lineItem) {
 	//print_r(get_object_vars($lineItem)); exit;
-	$line = implode(',', array(
+	print_r($lineItem->targeting);
+	$columns = array(
 		$lineItem->orderId,
-		'"' . addcslashes($lineItem->orderName, '"') . '"',
+		'"' . str_replace('"', '""', $lineItem->orderName) . '"',
 		$lineItem->id,
-		'"' . addcslashes($lineItem->name, '"') . '"',
+		'"' . str_replace('"', '""', $lineItem->name) . '"',
 		$lineItem->externalId,
-		is_null($lineItem->creationDateTime) ? '' : $dateTimeUtils->FromDfpDateTime($lineItem->creationDateTime)->format('Y-m-d H:i:s'),
-		is_null($lineItem->startDateTime) ? '' : $dateTimeUtils->FromDfpDateTime($lineItem->startDateTime)->format('Y-m-d H:i:s'),
-		is_null($lineItem->endDateTime) ? '' : $dateTimeUtils->FromDfpDateTime($lineItem->endDateTime)->format('Y-m-d H:i:s'),
+		is_null($lineItem->creationDateTime) ? null : $dateTimeUtils->FromDfpDateTime($lineItem->creationDateTime)->format('Y-m-d H:i:s'),
+		is_null($lineItem->startDateTime) ? null : $dateTimeUtils->FromDfpDateTime($lineItem->startDateTime)->format('Y-m-d H:i:s'),
+		is_null($lineItem->endDateTime) ? null : $dateTimeUtils->FromDfpDateTime($lineItem->endDateTime)->format('Y-m-d H:i:s'),
 		$lineItem->priority,
 		$lineItem->costType,
 		$lineItem->lineItemType,
 		is_null($lineItem->stats) ? 0 : $lineItem->stats->impressionsDelivered,
 		is_null($lineItem->stats) ? 0 : $lineItem->stats->clicksDelivered,
-		is_null($lineItem->deliveryIndicator) ? '' : str_replace('.', ',', $lineItem->deliveryIndicator->expectedDeliveryPercentage),
-		is_null($lineItem->deliveryIndicator) ? '' : str_replace('.', ',', $lineItem->deliveryIndicator->actualDeliveryPercentage),
+		is_null($lineItem->deliveryIndicator) ? null : $lineItem->deliveryIndicator->expectedDeliveryPercentage,
+		is_null($lineItem->deliveryIndicator) ? null : $lineItem->deliveryIndicator->actualDeliveryPercentage,
 		$lineItem->status,
-		'"' . addcslashes(trim(preg_replace('/\s\s+/', ' ', $lineItem->notes)), '"') . '"',
+		is_null($lineItem->notes) ? null : '"' . str_replace('"', '""', preg_replace("/[\n\r]/", " ", $lineItem->notes)) . '"',
 		$lineItem->isMissingCreatives,
 		$lineItem->primaryGoal->goalType,
 		$lineItem->primaryGoal->unitType,
 		$lineItem->primaryGoal->units
-        ));
-	fwrite($fp, $line . "\n");
+        );
+
+	foreach ($columns as $i => $column) {
+		$line = $column . ($i == count($columns) - 1 ? "\n" : ",");
+		fwrite($fp, $line);
+	}
       }
 
     }
@@ -140,7 +147,7 @@ try {
 
   fclose($fp);
 
-  shell_exec("cp line-items.csv " . sprintf('%s.csv', 'line-items-' . date('m-d-Y_H-i')));
+  //shell_exec("cp line-items.csv " . sprintf('%s.csv', 'line-items-' . date('m-d-Y_H-i')));
 
   printf("Uploading to Google Storage\n");
   $shell = shell_exec("/usr/local/bin/gsutil cp line-items*.csv gs://api-hub-output/dfp-reports/ad-operations/line-items/");
