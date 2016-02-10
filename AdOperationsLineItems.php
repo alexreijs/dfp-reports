@@ -109,7 +109,7 @@ try {
       $i = $page->startIndex;
       foreach ($page->results as $lineItem) {
 	//print_r(get_object_vars($lineItem)); exit;
-	print_r($lineItem->targeting);
+	//print_r($lineItem->targeting);
 	$columns = array(
 		$lineItem->orderId,
 		'"' . str_replace('"', '""', $lineItem->orderName) . '"',
