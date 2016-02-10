@@ -1,0 +1,200 @@
+Array
+(
+    [targeting] => Targeting Object
+        (
+            [geoTargeting] => 
+            [inventoryTargeting] => InventoryTargeting Object
+                (
+                    [targetedAdUnits] => Array
+                        (
+                            [0] => AdUnitTargeting Object
+                                (
+                                    [adUnitId] => 24218960
+                                    [includeDescendants] => 1
+                                )
+
+                        )
+
+                    [excludedAdUnits] => 
+                    [targetedPlacementIds] => 
+                )
+
+            [dayPartTargeting] => 
+            [technologyTargeting] => TechnologyTargeting Object
+                (
+                    [bandwidthGroupTargeting] => 
+                    [browserTargeting] => 
+                    [browserLanguageTargeting] => 
+                    [deviceCapabilityTargeting] => 
+                    [deviceCategoryTargeting] => 
+                    [deviceManufacturerTargeting] => 
+                    [mobileCarrierTargeting] => 
+                    [mobileDeviceTargeting] => 
+                    [mobileDeviceSubmodelTargeting] => 
+                    [operatingSystemTargeting] => 
+                    [operatingSystemVersionTargeting] => 
+                )
+
+            [customTargeting] => 
+            [userDomainTargeting] => 
+            [contentTargeting] => 
+            [videoPositionTargeting] => 
+        )
+
+    [creativeTargetings] => 
+    [orderId] => 119904560
+    [id] => 35406200
+    [name] => libelle_nl_getestop_clickcommand
+    [externalId] => 
+    [orderName] => P&G_AlwaysLinersOdette_FebMei13_tracking
+    [startDateTime] => DfpDateTime Object
+        (
+            [date] => Date Object
+                (
+                    [year] => 2013
+                    [month] => 2
+                    [day] => 11
+                )
+
+            [hour] => 0
+            [minute] => 0
+            [second] => 0
+            [timeZoneID] => Europe/Paris
+        )
+
+    [startDateTimeType] => USE_START_DATE_TIME
+    [endDateTime] => 
+    [autoExtensionDays] => 0
+    [unlimitedEndDateTime] => 1
+    [creativeRotationType] => EVEN
+    [deliveryRateType] => EVENLY
+    [roadblockingType] => ONE_OR_MORE
+    [frequencyCaps] => 
+    [lineItemType] => CLICK_TRACKING
+    [priority] => 16
+    [costPerUnit] => Money Object
+        (
+            [currencyCode] => EUR
+            [microAmount] => 0
+        )
+
+    [valueCostPerUnit] => Money Object
+        (
+            [currencyCode] => EUR
+            [microAmount] => 0
+        )
+
+    [costType] => CPC
+    [discountType] => PERCENTAGE
+    [discount] => 0
+    [contractedUnitsBought] => 0
+    [creativePlaceholders] => Array
+        (
+            [0] => CreativePlaceholder Object
+                (
+                    [size] => Size Object
+                        (
+                            [width] => 1
+                            [height] => 1
+                            [isAspectRatio] => 
+                        )
+
+                    [creativeTemplateId] => 
+                    [companions] => 
+                    [appliedLabels] => 
+                    [effectiveAppliedLabels] => 
+                    [expectedCreativeCount] => 1
+                    [creativeSizeType] => PIXEL
+                    [targetingName] => 
+                )
+
+        )
+
+    [activityAssociations] => 
+    [targetPlatform] => WEB
+    [environmentType] => BROWSER
+    [companionDeliveryOption] => UNKNOWN
+    [creativePersistenceType] => NOT_PERSISTENT
+    [allowOverbook] => 
+    [skipInventoryCheck] => 
+    [skipCrossSellingRuleWarningChecks] => 
+    [reserveAtCreation] => 
+    [stats] => Stats Object
+        (
+            [impressionsDelivered] => 0
+            [clicksDelivered] => 102
+            [videoCompletionsDelivered] => 0
+            [videoStartsDelivered] => 0
+        )
+
+    [deliveryIndicator] => 
+    [deliveryData] => DeliveryData Object
+        (
+            [units] => Array
+                (
+                    [0] => 0
+                    [1] => 0
+                    [2] => 0
+                    [3] => 0
+                    [4] => 0
+                    [5] => 0
+        )
+                    [6] => 0
+                )
+        )
+    [budget] => Money Object
+        (
+            [currencyCode] => EUR
+            [microAmount] => 0
+        )
+    [status] => DELIVERING
+    [reservationStatus] => UNRESERVED
+    [isArchived] => 
+    [webPropertyCode] => 
+    [appliedLabels] => 
+    [effectiveAppliedLabels] => 
+    [disableSameAdvertiserCompetitiveExclusion] => 
+    [lastModifiedByApp] => Goog_DFPUI
+    [notes] => 
+    [lastModifiedDateTime] => DfpDateTime Object
+        (
+            [date] => Date Object
+                (
+                    [year] => 2013
+                    [month] => 4
+                    [day] => 26
+                )
+            [hour] => 5
+            [minute] => 53
+            [second] => 49
+            [timeZoneID] => PST8PDT
+        )
+    [creationDateTime] => DfpDateTime Object
+        (
+            [date] => Date Object
+                (
+                    [year] => 2013
+                    [month] => 2
+                    [day] => 6
+                )
+            [hour] => 16
+            [minute] => 8
+            [second] => 27
+            [timeZoneID] => Europe/Paris
+        )
+    [isPrioritizedPreferredDealsEnabled] => 
+    [adExchangeAuctionOpeningPriority] => 0
+    [customFieldValues] => 
+    [isSetTopBoxEnabled] => 
+    [isMissingCreatives] => 
+    [setTopBoxDisplayInfo] => 
+    [videoMaxDuration] => 0
+    [primaryGoal] => Goal Object
+        (
+            [goalType] => NONE
+            [unitType] => IMPRESSIONS
+            [units] => -1
+        )
+    [secondaryGoals] => 
+    [grpSettings] => 
+)

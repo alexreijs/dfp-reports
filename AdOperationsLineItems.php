@@ -36,6 +36,7 @@ set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 
 require_once 'Google/Api/Ads/Dfp/Lib/DfpUser.php';
 require_once 'Google/Api/Ads/Dfp/Util/v201508/StatementBuilder.php';
+require_once 'Google/Api/Ads/Dfp/Util/v201508/DateTimeUtils.php';
 require_once dirname(__FILE__) . '/examples/Common/ExampleUtils.php';
 
 try {
@@ -46,23 +47,37 @@ try {
   // Log SOAP XML request and response.
   $user->LogDefaults();
 
+  // Get DateUtils
+  $dateTimeUtils = new DateTimeUtils();
+
   // Get the LineItemService.
   $lineItemService = $user->GetService('LineItemService', 'v201508');
 
   // Create a statement to select all line items.
   $statementBuilder = new StatementBuilder();
-  $statementBuilder->OrderBy('id ASC')
+  $statementBuilder->OrderBy('id DESC')
       ->Limit(StatementBuilder::SUGGESTED_PAGE_LIMIT);
 
-  $statementBuilder->Where("StartDateTime >= '" . date('Y-m-d', time() - 86400 * 31) . "'");
+  $statementBuilder->Where("EndDateTime >= '" . date('Y-m-d', time()) . "'");
+  $statementBuilder->Limit("10");
 
   // Default for total result set size.
   $totalResultSetSize = 0;
 
-  printf("Saving results to file\n");
+  printf("Downloading and saving results to file\n");
 
   $fn = "./line-items.csv";
   $fp = fopen($fn, "a");
+
+  fwrite($fp, implode(',', array(
+	'orderId',
+	'orderName',
+	'lineItemId',
+	'lineItemName',
+	'externalId',
+	'startDateTime',
+	'endDateTime'
+  )) . "\n");
 
   do {
     // Get line items by statement.
@@ -77,8 +92,17 @@ try {
       $totalResultSetSize = $page->totalResultSetSize;
       $i = $page->startIndex;
       foreach ($page->results as $lineItem) {
-	$line = implode(',', array($lineItem->id, $lineItem->orderId)) . "\n";
-	fwrite($fp, $line);
+
+	$line = implode(',', array(
+		$lineItem->orderId,
+		'"' . $lineItem->orderName . '"',
+		$lineItem->id,
+		'"' . $lineItem->name . '"',
+		$lineItem->externalId,
+		$dateTimeUtils->FromDfpDateTime($lineItem->startDateTime)->format('Y-m-d H:i:s'),
+		is_null($lineItem->endDateTime) ? '' : $dateTimeUtils->FromDfpDateTime($lineItem->endDateTime)->format('Y-m-d H:i:s')
+        ));
+	fwrite($fp, $line . "\n");
       }
 
     }
@@ -105,5 +129,3 @@ try {
 } catch (Exception $e) {
   printf("%s\n", $e->getMessage());
 }
-
-
