@@ -58,8 +58,8 @@ try {
   $statementBuilder->OrderBy('id DESC')
       ->Limit(StatementBuilder::SUGGESTED_PAGE_LIMIT);
 
-  $statementBuilder->Where("EndDateTime >= '" . date('Y-m-d', time()) . "'");
-  $statementBuilder->Limit("10");
+  $statementBuilder->Where("EndDateTime >= '" . date('Y-m-d', time() - 86400 * 7) . "'");
+  //$statementBuilder->Limit("10");
 
   // Default for total result set size.
   $totalResultSetSize = 0;
@@ -75,8 +75,22 @@ try {
 	'lineItemId',
 	'lineItemName',
 	'externalId',
+	'creationDateTime',
 	'startDateTime',
-	'endDateTime'
+	'endDateTime',
+	'priority',
+	'costType',
+	'lineItemType',
+	'impressionsDelivered',
+	'clicksDelivered',
+	'expectedDeliveryPercentage',
+	'actualDeliveryPercentage',
+	'status',
+	'notes',
+	'isMissingCreatives',
+	'primaryGoalType',
+	'primaryGoalUnitType',
+	'primaryGoalUnits'
   )) . "\n");
 
   do {
@@ -92,15 +106,29 @@ try {
       $totalResultSetSize = $page->totalResultSetSize;
       $i = $page->startIndex;
       foreach ($page->results as $lineItem) {
-
+	//print_r(get_object_vars($lineItem)); exit;
 	$line = implode(',', array(
 		$lineItem->orderId,
-		'"' . $lineItem->orderName . '"',
+		'"' . addcslashes($lineItem->orderName, '"') . '"',
 		$lineItem->id,
-		'"' . $lineItem->name . '"',
+		'"' . addcslashes($lineItem->name, '"') . '"',
 		$lineItem->externalId,
-		$dateTimeUtils->FromDfpDateTime($lineItem->startDateTime)->format('Y-m-d H:i:s'),
-		is_null($lineItem->endDateTime) ? '' : $dateTimeUtils->FromDfpDateTime($lineItem->endDateTime)->format('Y-m-d H:i:s')
+		is_null($lineItem->creationDateTime) ? '' : $dateTimeUtils->FromDfpDateTime($lineItem->creationDateTime)->format('Y-m-d H:i:s'),
+		is_null($lineItem->startDateTime) ? '' : $dateTimeUtils->FromDfpDateTime($lineItem->startDateTime)->format('Y-m-d H:i:s'),
+		is_null($lineItem->endDateTime) ? '' : $dateTimeUtils->FromDfpDateTime($lineItem->endDateTime)->format('Y-m-d H:i:s'),
+		$lineItem->priority,
+		$lineItem->costType,
+		$lineItem->lineItemType,
+		is_null($lineItem->stats) ? 0 : $lineItem->stats->impressionsDelivered,
+		is_null($lineItem->stats) ? 0 : $lineItem->stats->clicksDelivered,
+		is_null($lineItem->deliveryIndicator) ? '' : str_replace('.', ',', $lineItem->deliveryIndicator->expectedDeliveryPercentage),
+		is_null($lineItem->deliveryIndicator) ? '' : str_replace('.', ',', $lineItem->deliveryIndicator->actualDeliveryPercentage),
+		$lineItem->status,
+		'"' . addcslashes(trim(preg_replace('/\s\s+/', ' ', $lineItem->notes)), '"') . '"',
+		$lineItem->isMissingCreatives,
+		$lineItem->primaryGoal->goalType,
+		$lineItem->primaryGoal->unitType,
+		$lineItem->primaryGoal->units
         ));
 	fwrite($fp, $line . "\n");
       }
