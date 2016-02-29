@@ -58,10 +58,8 @@ try {
   $statementBuilder->OrderBy('id DESC')
       ->Limit(StatementBuilder::SUGGESTED_PAGE_LIMIT);
 
-  //$statementBuilder->Where("EndDateTime >= '" . date('Y-m-d', time() - 86400 * 7) . "' and Id IN (220191920, 226204160, 229005320, 229007000, 213311840, 213312080, 226082960, 227315000, 213312320, 229005800, 229007240, 227098400, 227098520, 225116960, 194592200, 194592440, 225117200, 224377640, 226214840, 226215080, 226353680, 229360880, 227808080, 227816360, 229377560, 37877240, 37877360, 226871120, 228534200,   4351720, 229340840, 194592920, 194592680)");
   $statementBuilder->Where("EndDateTime >= '" . date('Y-m-d', time() - 86400 * 7) . "'");
-  //$statementBuilder->Where("EndDateTime >= '" . date('Y-m-d', time() - 86400 * 7) . "' and id = 228600800");
-  $statementBuilder->Limit("100");
+  //$statementBuilder->Limit("100");
 
   // Default for total result set size.
   $totalResultSetSize = 0;
@@ -110,15 +108,40 @@ try {
       foreach ($page->results as $lineItem) {
 	//print_r(get_object_vars($lineItem)); exit;
 	//print_r($lineItem->targeting);
+
+	if (is_null($lineItem->creationDateTime))
+		$creationDateTimeString = null;
+	else {
+		$creationDateTime = $dateTimeUtils->FromDfpDateTime($lineItem->creationDateTime);
+		$creationDateTime->setTimezone(new DateTimeZone('Europe/Amsterdam'));
+		$creationDateTimeString = $creationDateTime->format('Y-m-d H:i:s');
+	}
+
+	if (is_null($lineItem->startDateTime))
+		$startDateTimeString = null;
+	else {
+		$startDateTime = $dateTimeUtils->FromDfpDateTime($lineItem->startDateTime);
+		$startDateTime->setTimezone(new DateTimeZone('Europe/Amsterdam'));
+		$startDateTimeString = $startDateTime->format('Y-m-d H:i:s');
+	}
+
+	if (is_null($lineItem->endDateTime))
+		$endDateTimeString = null;
+	else {
+		$endDateTime = $dateTimeUtils->FromDfpDateTime($lineItem->endDateTime);
+		$endDateTime->setTimezone(new DateTimeZone('Europe/Amsterdam'));
+		$endDateTimeString = $endDateTime->format('Y-m-d H:i:s');
+	}
+
 	$columns = array(
 		$lineItem->orderId,
 		'"' . str_replace('"', '""', $lineItem->orderName) . '"',
 		$lineItem->id,
 		'"' . str_replace('"', '""', $lineItem->name) . '"',
 		$lineItem->externalId,
-		is_null($lineItem->creationDateTime) ? null : $dateTimeUtils->FromDfpDateTime($lineItem->creationDateTime)->format('Y-m-d H:i:s'),
-		is_null($lineItem->startDateTime) ? null : $dateTimeUtils->FromDfpDateTime($lineItem->startDateTime)->format('Y-m-d H:i:s'),
-		is_null($lineItem->endDateTime) ? null : $dateTimeUtils->FromDfpDateTime($lineItem->endDateTime)->format('Y-m-d H:i:s'),
+		$creationDateTimeString,
+		$startDateTimeString,
+		$endDateTimeString,
 		$lineItem->priority,
 		$lineItem->costType,
 		$lineItem->lineItemType,
