@@ -90,7 +90,18 @@ try {
 	'isMissingCreatives',
 	'primaryGoalType',
 	'primaryGoalUnitType',
-	'primaryGoalUnits'
+	'primaryGoalUnits',
+
+	'targetingGeo',
+	'targetingExcludedAdunits',
+	'targetingBrowser',
+	'targetingCategory',
+	'targetingDevice',
+	'targetingOs',
+	'targetingOsVersion',
+	'targetingCustom',
+	'frequencyCaps',
+	'targetingPlatform'
   )) . "\n");
 
   do {
@@ -154,7 +165,18 @@ try {
 		$lineItem->isMissingCreatives,
 		$lineItem->primaryGoal->goalType,
 		$lineItem->primaryGoal->unitType,
-		$lineItem->primaryGoal->units
+		$lineItem->primaryGoal->units,
+
+		is_null($lineItem->targeting->geoTargeting) ? "" : "X",
+		is_null($lineItem->targeting->inventoryTargeting->excludedAdUnits) ? "" : "X",
+		is_null($lineItem->targeting->technologyTargeting->browserTargeting) ? "" : "X",
+		is_null($lineItem->targeting->technologyTargeting->deviceCategoryTargeting) ? "" : "X",
+		is_null($lineItem->targeting->technologyTargeting->mobileDeviceTargeting) ? "" : "X",
+		is_null($lineItem->targeting->technologyTargeting->operatingSystemTargeting) ? "" : "X",
+		is_null($lineItem->targeting->technologyTargeting->operatingSystemVersionTargeting) ? "" : "X",
+		is_null($lineItem->targeting->customTargeting) ? "" : "X",
+		is_null($lineItem->frequencyCaps) ? "" : "X",
+		is_null($lineItem->targetPlatform) ? "" : $lineItem->targetPlatform
         );
 
 	foreach ($columns as $i => $column) {
